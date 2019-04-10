@@ -379,7 +379,9 @@ class PlotPanel(wx.Panel):
             #self.ax.set_autoscale_on(False)
 
     def OnLeftMouseButtonDown(self, event):
-        self.start_pos = event.GetPositionTuple()
+        # obj = event.GetEventObject()
+        self.start_pos = event.GetPosition()
+        # self.start_pos = event.GetPositionTuple()
         #print 'Left Mouse button pressed ', self.ax.transData.inverse_xy_tup(self.start_pos)
         class Point:
             pass
@@ -416,7 +418,7 @@ class PlotPanel(wx.Panel):
 
     def OnMouseMove(self, event):
         if self.zooming and event.Dragging() and event.LeftIsDown():
-            self.cur_pos = event.GetPositionTuple()
+            self.cur_pos = event.GetPosition()
             #print 'Mouse Move ', self.ax.transData.inverse_xy_tup(self.cur_pos)
             class Point:
                 pass
@@ -469,14 +471,14 @@ class PlotPanel(wx.Panel):
         '''_DrawAndErase(self, box_to_draw, box_to_erase = None) --> None
         '''
         dc = wx.ClientDC(self.canvas)
-        dc.BeginDrawing()
+        # dc.BeginDrawing()
         dc.SetPen(wx.Pen(wx.WHITE, 1, wx.DOT))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.SetLogicalFunction(wx.XOR)
         if box_to_erase:
             dc.DrawRectangle(*box_to_erase)
         dc.DrawRectangle(*box_to_draw)
-        dc.EndDrawing()
+        # dc.EndDrawing()
 
     def OnContextMenu(self, event):
         '''OnContextMenu(self, event) --> None
