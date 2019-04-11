@@ -1378,10 +1378,7 @@ def parallel_calc_fom(vec):
     global model, par_funcs
     #print 'Trying to set parameters'
     # set the parameter values in the model
-    #this is not working in python 3.x for some reason
-    #map(lambda func, value:func(value), par_funcs, vec)
-    for fun,each_vec in zip(par_funcs,vec):
-        fun(each_vec)
+    map(lambda func, value:func(value), par_funcs, vec)
     #print 'Trying to evaluate'
     # evaluate the model and calculate the fom
     fom = model.evaluate_fit_func()

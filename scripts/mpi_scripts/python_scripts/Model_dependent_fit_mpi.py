@@ -4,7 +4,7 @@ import numpy as np
 from numpy import *
 from datetime import datetime
 #genxpath = '/home/qiu05/genx_mpi_qiu/genx_test'
-genxpath = '/home/qiu05/SuPerRod'
+genxpath = '/home/qiu/apps/SuPerRod_py3'
 import sys
 import time
 sys.path.insert(0,genxpath)
@@ -35,9 +35,9 @@ def find_boundary(n_process,n_jobs,rank):
     return left,right
 # Okay lets make it possible to batch script this file ...
 if len(sys.argv) !=3:
-    print sys.argv
-    print 'Wrong number of arguments to %s'%sys.argv[0]
-    print 'Usage: %s infile.gx'%sys.argv[0]
+    print(sys.argv)
+    print('Wrong number of arguments to %s'%sys.argv[0])
+    print('Usage: %s infile.gx'%sys.argv[0])
     sys.exit(1)
 
 infile = sys.argv[1]
@@ -95,7 +95,7 @@ create_trial = ['best_1_bin']#'best_1_bin','rand_1_bin',#'best_either_or','rand_
 
 # Population size
 use_pop_mult = False             # absolute (F) or relative (T) population size
-pop_mult = 8 			 # if use_pop_mult = True, populatio multiplier
+pop_mult = 8             # if use_pop_mult = True, populatio multiplier
 pop_size = pop_num        # if use_pop_mult = False, population size
 
 # Generations
@@ -193,11 +193,11 @@ for pars in par_list:
     iter = pars[3]
 
     # Load the model ...
-    if rank==0: print 'Loading model %s...'%infile
+    if rank==0: print('Loading model %s...'%infile)
     io.load_gx(infile, mod, opt, config)
     mod.script=replace_script_section(mod.get_script(),'running_mode',1)
     # Simulate, this will also compile the model script
-    if rank==0: print 'Simulating model...'
+    if rank==0: print('Simulating model...')
     mod.simulate()
     # Setting up the solver
     eval('mod.set_fom_func(fom_funcs.%s)' % fom)
@@ -206,74 +206,74 @@ for pars in par_list:
     try:
         opt.set_create_trial(trial)
     except:
-        print 'Warning: create_trial is not defined in script.'
+        print('Warning: create_trial is not defined in script.')
     try:
         opt.set_kr(kr)
     except:
-        print 'Warning: kr is not defined in script.'
+        print('Warning: kr is not defined in script.')
     try:
         opt.set_km(km)
     except :
-        print 'Warning: km is not defined in script.'
+        print('Warning: km is not defined in script.')
     try:
         opt.pf=pf
     except:
-        print 'Warning; pf is not defined in script.'
+        print('Warning; pf is not defined in script.')
     try:
         opt.set_use_pop_mult(use_pop_mult)
     except:
-        print 'Warning: use_pop_mult is not defined in script.'
+        print('Warning: use_pop_mult is not defined in script.')
     try:
         opt.set_pop_mult(pop_mult)
     except:
-        print 'Warning: pop_mult is not defined in script.'
+        print('Warning: pop_mult is not defined in script.')
     try:
         opt.set_pop_size(pop_size)
     except:
-        print 'Warning: pop_size is not defined in script.'
+        print('Warning: pop_size is not defined in script.')
     try:
         opt.set_use_max_generations(use_max_generations)
     except:
-        print 'Warning: use_max_generations is not defined in script.'
+        print('Warning: use_max_generations is not defined in script.')
     try:
         opt.set_max_generations(max_generations)
     except:
-        print 'Warning: max_generations is not defined in script.'
+        print('Warning: max_generations is not defined in script.')
     try:
         opt.set_max_generation_mult(max_generation_mult)
     except:
-        print 'Warning: max_generation_mult is not defined in script.'
+        print('Warning: max_generation_mult is not defined in script.')
     try:
         opt.set_use_parallel_processing(use_parallel_processing)
     except:
-        print 'Warning: use_parallel_processing is not defined in script.'
+        print('Warning: use_parallel_processing is not defined in script.')
     try:
         opt.set_use_start_guess(use_start_guess)
     except:
-        print 'Warning: use_start_guess is not defined in script.'
+        print('Warning: use_start_guess is not defined in script.')
     try:
         opt.set_use_boundaries(use_boundaries)
     except:
-        print 'Warning: use_boundaries is not defined in script.'
+        print('Warning: use_boundaries is not defined in script.')
     try:
         opt.set_use_autosave(use_autosave)
     except:
-        print 'Warning: use_autosave is not defined in script.'
+        print('Warning: use_autosave is not defined in script.')
     try:
         opt.set_autosave_interval(autosave_interval)
     except:
-        print 'Warning: autosave_interval is not defined in script.'
+        print('Warning: autosave_interval is not defined in script.')
     try:
         opt.set_max_log(max_log)
     except:
-        print 'Warning: max_log is not defined in script.'
+        print('Warning: max_log is not defined in script.')
     try:
         opt.set_sleep_time(sleep_time)
     except:
-        print 'Warning: sleep_time is not defined in script.'
+        print('Warning: sleep_time is not defined in script.')
 
     # Sets up the fitting ...
-    if rank==0:print 'Setting up the optimizer...'
+    if rank==0:print('Setting up the optimizer...')
     opt.reset() # <--- Add this line
     opt.init_fitting(mod)
     #rank 0 is in charge of generating of pop vectors, and distribute to the other processors
@@ -330,26 +330,26 @@ for pars in par_list:
             try:
                 val = config.set('solver', options_float[index],\
                                     set_float[index])
-            except io.OptionError, e:
-                print 'Could not locate save solver.' +\
-                    options_float[index]
+            except io.OptionError as e:
+                print('Could not locate save solver.' +\
+                    options_float[index])
 
             # Then the bool flags
             for index in range(len(options_bool)):
                 try:
                     val = config.set('solver',\
                                         options_bool[index], set_bool[index])
-                except io.OptionError, e:
-                    print 'Could not write option solver.' +\
-                        options_bool[index]
+                except io.OptionError as e:
+                    print('Could not write option solver.' +\
+                        options_bool[index])
 
             try:
                 config.set('solver', 'create trial',\
                             opt.get_create_trial())
-            except io.OptionError, e:
-                print 'Could not write option solver.create trial'
+            except io.OptionError as e:
+                print('Could not write option solver.create trial')
     else:
-        print 'Could not write config to file'
+        print('Could not write config to file')
     ### end of block: save config
 
     # build outfile name
@@ -359,44 +359,44 @@ for pars in par_list:
     #outfile=outfile+fom+str(iter)+'_ran.gx'
     #outfile = '%s_%s_run%d.gx' % (outfile, TAG, iter)
     if rank==0:
-        print 'Saving the initial model to %s'%outfile
+        print('Saving the initial model to %s'%outfile)
         io.save_gx(outfile, mod, opt, config)
 
-        print ''
-        print 'Settings:'
-        print '---------'
+        print('')
+        print('Settings:')
+        print('---------')
 
-        print 'Number of fit parameters    = %s' % len(opt.best_vec)
-        print 'FOM function                = %s' % mod.fom_func.func_name
-        print ''
-        print 'opt.km                      = %s' % opt.km
-        print 'opt.kr                      = %s' % opt.kr
-        print 'opt.create_trial            = %s' % opt.create_trial.im_func
-        print ''
-        print 'opt.use_parallel_processing = %s' % opt.use_parallel_processing
-        print ''
-        print 'opt.use_max_generations     = %s' % opt.use_max_generations
-        print 'opt.max_generation_mult     = %s' % opt.max_generation_mult
-        print 'opt.max_generations         = %s' % opt.max_generations
-        print 'opt.max_gen                 = %s' % opt.max_gen
-        print 'opt.max_log                 = %s' % opt.max_log
-        print ''
-        print 'opt.use_start_guess         = %s' % opt.use_start_guess
-        print 'opt.use_boundaries          = %s' % opt.use_boundaries
-        print 'opt.use_autosave            = %s' % opt.use_autosave
-        print 'opt.autosave_interval       = %s' % opt.autosave_interval
-        print ''
-        print 'opt.pop_size                = %s' % opt.pop_size
-        print 'opt.use_pop_mult            = %s' % opt.use_pop_mult
-        print 'opt.pop_mult                = %s' % opt.pop_mult
-        print 'opt.n_pop                   = %s' % opt.n_pop
-        print ''
-        print '--------'
-        print ''
+        print('Number of fit parameters    = %s' % len(opt.best_vec))
+        print('FOM function                = %s' % mod.fom_func)
+        print('')
+        print('opt.km                      = %s' % opt.km)
+        print('opt.kr                      = %s' % opt.kr)
+        print('opt.create_trial            = %s' % opt.create_trial)
+        print('')
+        print('opt.use_parallel_processing = %s' % opt.use_parallel_processing)
+        print('')
+        print('opt.use_max_generations     = %s' % opt.use_max_generations)
+        print('opt.max_generation_mult     = %s' % opt.max_generation_mult)
+        print('opt.max_generations         = %s' % opt.max_generations)
+        print('opt.max_gen                 = %s' % opt.max_gen)
+        print('opt.max_log                 = %s' % opt.max_log)
+        print('')
+        print('opt.use_start_guess         = %s' % opt.use_start_guess)
+        print('opt.use_boundaries          = %s' % opt.use_boundaries)
+        print('opt.use_autosave            = %s' % opt.use_autosave)
+        print('opt.autosave_interval       = %s' % opt.autosave_interval)
+        print('')
+        print('opt.pop_size                = %s' % opt.pop_size)
+        print('opt.use_pop_mult            = %s' % opt.use_pop_mult)
+        print('opt.pop_mult                = %s' % opt.pop_mult)
+        print('opt.n_pop                   = %s' % opt.n_pop)
+        print('')
+        print('--------')
+        print('')
 
 
         # To start the fitting
-        print 'Fitting starting...'
+        print('Fitting starting...')
     if rank==0:t1 = time.time()
     if rank==0:opt.text_output('Calculating start FOM ...')
     opt.running = True
@@ -406,6 +406,7 @@ for pars in par_list:
     # Old leftovers before going parallel, rank 0 calculate fom vec and distribute to the other processors
     left,right=find_boundary(size,len(opt.pop_vec),rank)
     tmp_fom_vec=[opt.calc_fom(vec) for vec in opt.pop_vec[left:right+1]]
+    # print(rank,left,right,len(tmp_fom_vec))
     comm.Barrier()
     tmp_fom_vec=comm.gather(tmp_fom_vec,root=0)
     if rank==0:
@@ -503,7 +504,7 @@ for pars in par_list:
             # the best fom
             if rank==0:
                 if abs(sim_fom - opt.best_fom) > opt.fom_allowed_dis:
-		    print sim_fom,opt.best_fom
+                    print(sim_fom,opt.best_fom)
                     opt.text_output('Disagrement between two different fom'
                                     ' evaluations')
                     opt.error = ('The disagreement between two subsequent '
@@ -535,38 +536,38 @@ for pars in par_list:
         if rank==0 and gen%opt.autosave_interval == 0 and opt.use_autosave:
 
             opt.autosave()
-	if gen%opt.autosave_interval==0:
-	    if open("run_or_break").readlines()[0].startswith("break"):
-	       #open("run_or_break","w").write("run")
-		break
-	    else:
-	    	std_val=std(opt.fom_log[:,1][-200:])
-	   	if std_val<0:
-		    if rank==0:
-		        opt.text_output('std='+str(std_val))
-	            break
-                else:
-		    if rank==0:
-                        opt.text_output('std='+str(std_val))
-            	        #calculate the error bar for parameters
-            	        n_elements = len(opt.start_guess)
-		        #opt.text_output('start_guesslength='+str(n_elements))
-                        #print 'Number of elemets to calc errobars for ', n_elements
-                        cum_N=0
-                        for index in range(n_elements):
-                            # calculate the error
-                            # TODO: Check the error bar buisness again and how to treat
-                            # Chi2
-                            #print "senor",self.fom_error_bars_level
-                            try:
-                                (error_low, error_high) = opt.calc_error_bar(index, 1.05)
-                            except:
-                                break
-                            error_str = '(%.3e, %.3e)'%(error_low, error_high)
-                            while mod.parameters.get_value(index+cum_N,2)!=True:
-                                cum_N=cum_N+1
-                            mod.parameters.set_value(index+cum_N,5,error_str)
-	                opt.autosave()
+    if gen%opt.autosave_interval==0:
+        if open("run_or_break").readlines()[0].startswith("break"):
+           #open("run_or_break","w").write("run")
+            break
+        else:
+            std_val=std(opt.fom_log[:,1][-200:])
+        if std_val<0:
+            if rank==0:
+                opt.text_output('std='+str(std_val))
+                break
+            else:
+                if rank==0:
+                    opt.text_output('std='+str(std_val))
+                    #calculate the error bar for parameters
+                    n_elements = len(opt.start_guess)
+                    #opt.text_output('start_guesslength='+str(n_elements))
+                    #print 'Number of elemets to calc errobars for ', n_elements
+                    cum_N=0
+                    for index in range(n_elements):
+                        # calculate the error
+                        # TODO: Check the error bar buisness again and how to treat
+                        # Chi2
+                        #print "senor",self.fom_error_bars_level
+                        try:
+                            (error_low, error_high) = opt.calc_error_bar(index, 1.05)
+                        except:
+                            break
+                        error_str = '(%.3e, %.3e)'%(error_low, error_high)
+                        while mod.parameters.get_value(index+cum_N,2)!=True:
+                            cum_N=cum_N+1
+                        mod.parameters.set_value(index+cum_N,5,error_str)
+                opt.autosave()
 
 
     if rank==0:
@@ -587,10 +588,10 @@ for pars in par_list:
 
     if rank==0:
         t2 = time.time()
-        print 'Fitting finsihed!'
-        print 'Time to fit: ', (t2-t1)/60., ' min'
+        print('Fitting finsihed!')
+        print('Time to fit: ', (t2-t1)/60., ' min')
 
-        print 'Updating the parameters'
+        print('Updating the parameters')
     mod.parameters.set_value_pars(opt.best_vec)
     if rank==0:
     #calculate the error bar for parameters
@@ -607,17 +608,17 @@ for pars in par_list:
            except:
                break
            error_str = '(%.3e, %.3e)'%(error_low, error_high)
-	   while mod.parameters.get_value(index+cum_N,2)!=True:
-	       cum_N=cum_N+1
-	   mod.parameters.set_value(index+cum_N,5,error_str)
+       while mod.parameters.get_value(index+cum_N,2)!=True:
+           cum_N=cum_N+1
+       mod.parameters.set_value(index+cum_N,5,error_str)
 
 
 
     if rank==0:
-        print 'Saving the fit to %s'%outfile
+        print('Saving the fit to %s'%outfile)
         io.save_gx(outfile, mod, opt, config)
 
-        print 'finished current fit'
+        print('finished current fit')
         #if you want to create the logfile, uncomment following lines
         """
         fid = open(logfile,'a')
@@ -627,11 +628,11 @@ for pars in par_list:
         """
 #t_mid-t_start_0 is the headover time before fitting starts, this headover time depend on # of cups used and can be up to 2hr in the case of using 100 cup chips
     if rank==0:
-        print "run starts @",str(t_start_0)
-        print "fitting starts @",str(t_mid)
-        print "run stops @",str(t_end)
-        print "headover time is ",str(t_mid-t_start_0)
-        print "fitting time is ",str(t_end-t_mid)
-        print 'Fitting sucessfully finished with mean speed of ',mean_speed/speed_inc
+        print("run starts @",str(t_start_0))
+        print("fitting starts @",str(t_mid))
+        print("run stops @",str(t_end))
+        print("headover time is ",str(t_mid-t_start_0))
+        print("fitting time is ",str(t_end-t_mid))
+        print('Fitting sucessfully finished with mean speed of ',mean_speed/speed_inc)
     else:
         pass
